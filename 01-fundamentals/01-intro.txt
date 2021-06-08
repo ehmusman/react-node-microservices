@@ -1,0 +1,4 @@
+what are microservices?
+before we know about it we have to know that how we probably build the servers right now?
+we use monolithic archirecture. in monolithis architecture we have all of code of our application under a single code base. and we deploy this code base as a single discrete unit.
+in this architecture when we send a request it probably goes through the auth middleware, than go towards the router. through a specificc route and different logic is implemented on the base of requst and that request might get the data from the database and send it to back to the user.
