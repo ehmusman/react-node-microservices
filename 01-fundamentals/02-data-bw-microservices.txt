@@ -1,0 +1,19 @@
+one of the biggest challange is tha datamanagement between different services
+
+with microservices we store and access data in sort of strange way. 
+1- how we sore data
+2- how we access data
+in microsrvice approach.
+
+a- we create saperate database for each of different microservice.
+b- we are not going to acces data from one service to other microservice's database, 
+why this is?
+
+why database per service?
+1- we want each service to run indeendently of other services
+2- database schema/structure might change unexpectedly
+3- some services might function more efficiently with different types of DB's(sql VS noSql)
+
+what? if we have one database for every services?
+if some thing bad happens with database all services will be affected badly
+scalling this database will be really challanging.
