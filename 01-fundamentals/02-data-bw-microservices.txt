@@ -17,3 +17,26 @@ why database per service?
 what? if we have one database for every services?
 if some thing bad happens with database all services will be affected badly
 scalling this database will be really challanging.
+
+====================================Communication Strategies =====================
+there are two strategies to communicaate between the services
+1- sync 
+2- async
+these words dont mean what they mean in javascript
+
+=>>> sync communication style
+    services communicate with each other using diresct request
+    this is not necessarily that this should b an http request. it is some kind of direct request to fetch some information
+
+=>>> async communication style
+    Services communicated with each other using events
+    its a little bit confusing
+ ============================= Notes on sync  Communication =======================
+ => Pros
+1- conceptually easy to understand
+2- Service D dont need a database
+=> Cons
+3- it introduces a ependencies between the services
+4- if any interservice request fails, the overall request fails
+5- the entire request is only as fast as the slowest request
+6- Can easily introduce webs of requests
