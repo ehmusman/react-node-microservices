@@ -40,3 +40,38 @@ these words dont mean what they mean in javascript
 4- if any interservice request fails, the overall request fails
 5- the entire request is only as fast as the slowest request
 6- Can easily introduce webs of requests
+
+
+============= Communication between differenc services using async communication style==========
+there are two different ways for async communication. 
+first method is little bit tidious. but we have to know about it. 
+so the general idea between async communication is that we are going to introduce to the entire application that is accessible to all of the services is reffers to an Event Bus
+this purpose of this event bus is to handle a little notifications in the form of events being emitted from all different services. 
+
+these events are like little objects or like little notes, that describes that something has happend or something needs to happen inside our application.
+
+each service is connected with this event bus. each service can either emits or receives the events. its means that all of the services are weired up with a single point of failures and that is the actual event bus. so this event bus should not be crashed every time.
+
+now we'll see how all this works
+points to be notted
+1- service A is for signup of users
+2- service B is for available products
+3- service C is for listing of orders
+4- service D is for getting all the orders related to a single User.
+
+here the Service D is creating a bridge between all the services A, B and C
+
+service D will emit an event to check if the user with the given id is present or not. this event will float throug the event bus. event bus will send a copy of this event to the service A. Service A  will have a code that will be executed every time when this particular event will happen. this particulaer piece of code will execute and find if the user is presen or not. after confirmation service A will also emit an event with some data about user or in the for of error if user is not present. this result will automatically sent to the service D. Service D will also have some piece of code that will be executed when this particular event will happen.
+
+we'll reppeat these all steps to get all the orders from service C related to the given user and related products from the service B agains each order. this is the one possible way to communicate in async style between different styles.
+
+============================= Notes on async  Communication method 1 ======================
+all the downside with sync communication probably have additional downside for async communication with this approach
+
+1- conceptually not super easy to understand
+2- Service D dont need a database
+
+3- it introduces a dependencies between the services
+4- if any event fails, the overall request fails or probably timed out.
+5- the entire request is only as fast as the slowest event
+6- Can easily introduce webs of different events emitted
