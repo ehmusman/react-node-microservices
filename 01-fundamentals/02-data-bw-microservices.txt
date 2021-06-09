@@ -75,3 +75,62 @@ all the downside with sync communication probably have additional downside for a
 4- if any event fails, the overall request fails or probably timed out.
 5- the entire request is only as fast as the slowest event
 6- Can easily introduce webs of different events emitted
+
+
+============================= Notes on async  Communication method 2 ======================
+just like the databse-per-service pattern, async communication is going to seem bizarre and enefficient
+
+to solve the above problem we have to standarized some thing like
+we have to decide the exact behaviour of service D and the data that it needs.
+refine the exact goal of the service is the main thing
+
+Service D => Given the ID of the User, show the title and image for every product they have ever 
+            ordered
+thats the exact precise goal of service D.
+
+Solution:
+we'll setup a separate database for service D with two collections. 
+1- products
+    id, title, image
+2- Users
+    id, products Ids=[], an array of products id's  that he has ordered
+
+////////////////////////////////////////////
+// let for Products                       //
+// id      title       image              //
+// 5       "pants"     "pants.jpeg"       //
+// 20      "shoes"     " shoes.png"       //
+//                                        //
+// for Users                              //
+// id          Products Ids               //
+// 1               [5,20]                 //
+////////////////////////////////////////////
+
+
+if we have database such like the above we can easily implement the service D.
+now the point is that how can we create this database? this is the main challange. because the service D never ever know about when a user is signUp, when a product is created and when an order is placed.
+how can we make the service A, B and C to somehow tells to the Service D that when a user signup, when a product is created, when an order is placed.
+
+if we tries to create some sync communication between Service A,D or B,D or C,D, then service A,B,C will be crashed id service D is not Up and Running. because it becomes the dependency for Service A,B,C.
+
+now we start to think to do it in async method that how can we put data in DB of service D?
+the solution is that when a request is made to the Service A for User Signup, or to service B for creating product, or to service D for placing an order, an event will occur simmultaneously that what is happened to these services right now. 
+
+
+let at start a product is created. an event will happen. this event will go through the event bus and received by the Service D. service D has a code to respond agains this event. this event will also had some king of data related to product e,g id, title, image. this data will stored in the database of service D usder Products collection.
+
+when a user signUp and event will emited again and going through the event bus and received by Service D. this event may have the data related to user e,g, id of user. service D has a code to respond agains this event. this code will put the user's Id in the Service D databse uder the Users collection with products Ids equal to an empty brackets.
+
+ when a user will placed an order, than again an event will be emitted wit the data related to product e,g, product Id. this event will pass through the event bus and will also be received by the Service D. service D has a code that will respond agains this event and put the ordered product's id inside the empty brackets.
+
+ in this way a new database is populated very easily for service D.
+
+============================= Pros and Cons of async  Communication method 2 ======================
+=> Pros
+1- service D has 0 dependencies on other services
+2- service D will be extremely Fast.
+
+=> Cons
+3- Data duplication. Paying for extra Storage + extra DB (its not a big deal. todays the db are very less costly. to save the records of about 100 millions of products we have to pay only 14$ per year. its not a big deal.)(storage in the modern world is relatively free)
+
+4- Harder to understand. (its also not a big deal. practice makes a map perfect)
