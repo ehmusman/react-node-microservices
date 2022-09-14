@@ -11,8 +11,7 @@ const CreateComment = ({postId}) => {
     return (
         <form onSubmit={handleOnSubmit}>
             <div className="form-group">
-                <label htmlFor="comment">New Comment</label>
-                <input value={content} onChange={e => setContent(e.target.value)} className="form-control" id="comment"/>
+                <input value={content} placeholder='Create New Comment' onChange={e => setContent(e.target.value)} className="form-control" id="comment"/>
             </div>
             <input type="submit" className="btn btn-primary" />
         </form>

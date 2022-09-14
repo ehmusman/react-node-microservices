@@ -8,7 +8,7 @@ a monolithic contains all the routings, all the midlewares, all the business log
 
 a single micro service contains all of the routings, all the middlewares, all the businesss logics, database access to implement the one featurs of our application.
 
-so in monolithic all the code is needed to implement every feature of our application and in monolithic code is needed to implement the one feature of our application.
+so in monolithic all the code is needed to implement every feature of our application and in microservices, code is needed to implement the one feature of our application.
 
 in microservices all different features are wrapped inside the each of different service. the most important thing is that each of the service is entirely self contained.
 if any other service crashes it doesnt effect the other service.
