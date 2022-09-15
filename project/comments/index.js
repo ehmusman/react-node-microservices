@@ -1,14 +1,16 @@
 const express = require("express")
 const axios = require("axios")
 const app = express()
+const { randomBytes } = require("crypto")
+
 app.use(express.json())
 const cors = require("cors")
 app.use(cors())
-const commentsByPostId = []
+const commentsByPostId = {}
 
 app.get("/posts/:id/comments", (req, res) => {
     const { id: postId } = req.params
-    const comments = commentsByPostId.filter(post => post.postId === postId) || []
+    const comments = commentsByPostId[postId] || []
     res.send(comments)
 })
 
@@ -16,9 +18,11 @@ app.get("/posts/:id/comments", (req, res) => {
 app.post("/posts/:id/comments", async (req, res) => {
     const { content } = req.body
     const { id: postId } = req.params
-    const comment = { postId, id: Math.round(Math.random() * 123123123 / 23), content }
-    commentsByPostId.push(comment)
-
+    const id = randomBytes(4).toString("hex")
+    const comments = commentsByPostId[postId] || []
+    const comment = { postId, id, content, status: 'pending' }
+    comments.push(comment)
+    commentsByPostId[postId] = comments
     await axios.post("http://localhost:4005/events", {
         type: "commentCreated",
         payload: comment
@@ -26,10 +30,21 @@ app.post("/posts/:id/comments", async (req, res) => {
     res.status(201).send(comment)
 })
 
-app.post("/events", (req, res) => {
+app.post("/events", async (req, res) => {
     const { type, payload } = req.body
     if (type === "commentCreated") {
-        console.log(type, payload)
+    }
+    if (type === "commentModerated"){
+        const { id,postId,status,content } = payload
+        const comments = commentsByPostId[postId]
+        const comment = comments.find(comment => comment.id === id)
+        comment.status = status
+
+        // comment is update, spreading this event to all the services
+        await axios.post("http://localhost:4005/events", {
+            type: "commentUpdated",
+            payload: {id, postId, status,content}
+        })
     }
     res.send({ status: "OK" })
 })

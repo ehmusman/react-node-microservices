@@ -1,5 +1,6 @@
 const express = require("express")
 const cors = require("cors")
+const { randomBytes } = require("crypto")
 const app = express()
 const axios = require("axios")
 app.use(cors())
@@ -13,7 +14,8 @@ app.get("/posts", (req, res) => {
 
 app.post("/posts", async (req, res) => {
     const { title } = req.body
-    const post = { id: Math.round(Math.random() * 123123123 / 23), title }
+    const id = randomBytes(4).toString("hex")
+    const post = { id, title }
     posts.push(post)
 
     await axios.post("http://localhost:4005/events", {
@@ -26,7 +28,6 @@ app.post("/posts", async (req, res) => {
 app.post("/events", (req, res) => {
     const { type, payload } = req.body
     if (type === "postCreated") {
-        console.log(type, payload)
     }
     res.send({ status: "OK" })
 })

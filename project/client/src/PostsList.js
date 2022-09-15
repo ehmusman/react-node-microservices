@@ -7,7 +7,6 @@ const PostsList = () => {
 
     const fetchPosts = async () => {
         const { data } = await axios.get("http://localhost:4002/posts");
-        console.log("data", data);
         const allPosts = Object.values(data.posts)
         setPosts(allPosts);
     };
