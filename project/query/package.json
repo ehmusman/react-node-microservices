@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "create_image": "docker build -t ehmusman/query:0.0.1 ."
+    "create_image": "docker build -t ehmusman/query ."
   },
   "keywords": [],
   "author": "",

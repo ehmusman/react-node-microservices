@@ -1,0 +1,31 @@
+# there are 4 types of services
+
+# 01- Cluster IP
+#  this is used to network different pods together. it Sets up an easy-to-remember URL to Access a POD in the cluster.
+
+# 02- Node Port, Makes a POD accessible From Outside the Cluster. Usually only used for Development purposes.
+
+# 03- Load Balancer.
+#  makes a POD accessible from outside the cluster. this is the right way to expose a POD to the outside world.
+
+# 04- External Name
+#  Redirects an in cluster request to a CNAME url... Dont worry about this one
+
+
+# all the services are just types of objects in kubernetese.
+#  all these objects we create are made by first creating a config file and than apply that config file to the cluster
+# whenever we'll talk about creating a service or modifying a service, we're always talking for creating a config file
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-srv
+spec:
+  type: NodePort
+  selector:
+    app: posts
+  ports:
+    - name: posts
+      protocol: TCP
+      port: 4000
+      targetPort: 4000

@@ -22,9 +22,8 @@ const handleEvents = (type, payload) => {
 }
 app.post("/events", async (req, res) => {
     const { type, payload } = req.body
-
+    console.log("handleEvents ", type)
     handleEvents(type, payload)
-    // console.log(posts)
     res.send({ status: "OK" })
 })
 
@@ -35,7 +34,7 @@ app.get("/posts", (req, res) => {
 app.listen(4002, async () => {
     console.log("Query Service is running on the port 4002")
 
-    const {data} = await axios.get("http://localhost:4005/events")
+    const { data } = await axios.get("http://event-bus-srv:4005/events")
 
     for(let event of data){
         console.log("processing event", event.type);

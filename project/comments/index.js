@@ -16,6 +16,7 @@ app.get("/posts/:id/comments", (req, res) => {
 
 
 app.post("/posts/:id/comments", async (req, res) => {
+try {
     const { content } = req.body
     const { id: postId } = req.params
     const id = randomBytes(4).toString("hex")
@@ -23,11 +24,15 @@ app.post("/posts/:id/comments", async (req, res) => {
     const comment = { postId, id, content, status: 'pending' }
     comments.push(comment)
     commentsByPostId[postId] = comments
-    await axios.post("http://localhost:4005/events", {
+    await axios.post("http://event-bus-srv:4005/events", {
         type: "commentCreated",
         payload: comment
     })
     res.status(201).send(comment)
+} catch (error) {
+    console.log("comment creating error", error);
+    res.status(400).send("comment creating error")
+}
 })
 
 app.post("/events", async (req, res) => {
@@ -41,7 +46,7 @@ app.post("/events", async (req, res) => {
         comment.status = status
 
         // comment is update, spreading this event to all the services
-        await axios.post("http://localhost:4005/events", {
+        await axios.post("http://event-bus-srv:4005/events", {
             type: "commentUpdated",
             payload: {id, postId, status,content}
         })
