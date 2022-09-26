@@ -1,7 +1,8 @@
 FROM node:14
 WORKDIR /app
-RUN yarn global add serve
-COPY ./build ./build
+COPY ./package.json .
+RUN npm install
+COPY . .
 ENV PORT 3000
 EXPOSE 3000
-CMD ["serve" , "-s" , "build"]
+CMD ["npm" , "start"]
