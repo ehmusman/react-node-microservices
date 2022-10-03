@@ -1,8 +1,8 @@
 import express, { Request, Response , NextFunction} from "express";
 import { body, validationResult } from "express-validator"
+import { BadRequestError } from "../errors/badRequestError";
 import { RequestValidationError } from "../errors/requestValidationError";
-import { DatabaseConnectionError } from "../errors/databaseConnectionError";
-
+import { User } from "../models/user";
 const router = express.Router()
 
 router.post("/signup", [
@@ -17,10 +17,16 @@ router.post("/signup", [
         }
         const { email, password } = req.body
         
+        // find if user with same email already exists or not?
+        const existingUser = await User.findOne({email})
+        if(existingUser){
+           throw new BadRequestError("Email already in use...")
+        }
+        const user = User.build({email, password})
         console.log("Creatig User....")
+        await user.save()
         // throw new Error("Error cnnecting to database")
-        throw new DatabaseConnectionError()
-        res.send({ email, password })
+        res.status(201).send(user)
 })
 
 export default router
