@@ -19,7 +19,6 @@ router.post("/signup", [
            throw new BadRequestError("Email already in use...")
         }
         const user = User.build({email, password})
-        console.log("Creatig User....")
         await user.save()
         // Generate JWT
         const userJWT = jwt.sign({
