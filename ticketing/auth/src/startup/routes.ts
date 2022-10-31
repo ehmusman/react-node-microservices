@@ -3,8 +3,7 @@ import currrentUserRouter from "../routes/currentUser"
 import signinRouter from "../routes/signin"
 import signoutRouter from "../routes/signout"
 import signupRouter from "../routes/signup"
-import { errorHandler } from "../middlewares/errorHandler"
-import { NotFoundError } from "../errors/notFountError"
+import { errorHandler, NotFoundError } from "@usman-bakhsh/common"
 
 export default function(app: Express){
     app.use("/api/users", currrentUserRouter)

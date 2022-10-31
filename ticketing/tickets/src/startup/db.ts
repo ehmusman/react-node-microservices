@@ -6,7 +6,7 @@ export default async function () {
     }
     try {
         await mongoose.connect(process.env.MONGO_URI)
-        console.log("Connected to DB auth DB")
+        console.log("Connected to DB Ticketing DB")
     } catch (error) {
         console.error(error)
     }
