@@ -3,7 +3,7 @@ import "express-async-errors"
 import routers from "./startup/routes"
 import cookieSession from "cookie-session"
 import dotenv from "dotenv"
-
+import {currentUser} from "@usman-bakhsh/common"
 dotenv.config()
 const app = express()
 app.set("trust proxy", true)
@@ -16,10 +16,8 @@ app.use(
 
     })
 )
-
+app.use(currentUser)
 // routes
 routers(app)
-if (!process.env.JWT_KEY) {
-    throw new Error("JWT_KEY must be defined")
-}
+
 export {app}

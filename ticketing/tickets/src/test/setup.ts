@@ -14,6 +14,7 @@ import request from "supertest"
 
 let mongo:any;
 beforeAll(async () => {
+    process.env.JWT_KEY="kijuhygtfrrtcyvuiokphytfr"
      mongo = await MongoMemoryServer.create()
     const mongoURI = await mongo.getUri()
 
