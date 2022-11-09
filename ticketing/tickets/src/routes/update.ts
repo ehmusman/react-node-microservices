@@ -2,6 +2,8 @@ import express, {Request, Response} from "express"
 import { Ticket } from "../models/ticket"
 import {body} from "express-validator"
 import { NotFoundError, requireAuth, NotAuthorizedError, validateRequest } from "@usman-bakhsh/common"
+import { TicketUpdatedPublisher } from "../events/publishers/ticketUpdatedPublisher"
+import { natsWrapper } from "../natsWrapper"
 
 const router = express.Router()
 
@@ -22,6 +24,12 @@ router.put("/:id",requireAuth,[
     ticket.set({title, price})
 
     await ticket.save()
+    new TicketUpdatedPublisher(natsWrapper.client).publish({
+        id: ticket.id,
+        title: ticket.title,
+        price: ticket.price,
+        userId: ticket.userId
+    })
     res.status(200).send(ticket)
 
 })

@@ -4,6 +4,7 @@ import { app } from "../../app"
 import signin from "../../utility/signin"
 import {Ticket} from "../../models/ticket"
 
+jest.mock("../../natsWrapper")
 it('has a route handler listening to /api/tickets for post request', async () => {
     const response = await request(app)
     .post("/api/tickets")
